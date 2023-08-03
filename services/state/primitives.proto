@@ -17,16 +17,16 @@ package proto;
  * limitations under the License.
  */
 
+option java_package = "com.hederahashgraph.api.proto.java.primitive";
+// <<<pbj.java_package = "com.hedera.hapi.node.state.primitive">>> This comment is special code for setting PBJ Compiler java package
+option java_multiple_files = true;
+
 /**
  * This proto file contains primitive value messages.
  * These are intended only for situations where the entire value to be stored in state is a single
  * primitive.  These should never be used as components of another message; use the protobuf
  * type instead.
  */
-
-option java_package = "com.hederahashgraph.api.proto.java.primitive";
-// <<<pbj.java_package = "com.hedera.hapi.node.state.primitive">>> This comment is special code for setting PBJ Compiler java package
-option java_multiple_files = true;
 
 /**
  * A single 64-bit number with no particular meaning.
