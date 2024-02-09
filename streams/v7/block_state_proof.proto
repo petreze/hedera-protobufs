@@ -37,9 +37,15 @@ import "state/blockrecords/running_hashes.proto";
 message BlockStateProof {
 
   /**
+   * The round this proof was created for. We provide this because a proof for a future round can be used
+   * to prove the state of the ledger at that round and the rounds before it.
+   */
+  uint64 round = 1;
+
+  /**
    * Sibling hashes at each level of tree from root to leaf
    */
-  repeated SiblingHashes sibling_hashes = 1;
+  repeated SiblingHashes sibling_hashes = 2;
 
   /**
    * The RunningHashes leaf, Running SHA384 hash of all items contained in the
@@ -49,14 +55,14 @@ message BlockStateProof {
    * RunningHashes.n_minus_1_running_hash = the start running hash of this
    * block, aka the end running hash of previous block.
    */
-  RunningHashes end_running_hashes = 2;
+  RunningHashes end_running_hashes = 3;
 
   /**
    * Nodes signing the root hash of state proof tree. This will include at least
    * 2/3rds + 1 nodes of the current valid address book. It might be a different
    * subset of nodes in block files produced by different nodes.
    */
-  repeated BlockSignature block_signatures = 3;
+  repeated BlockSignature block_signatures = 4;
 }
 
 /**
@@ -70,8 +76,8 @@ message BlockSignature {
   bytes signature = 1;
 
   /**
-   * The node that is signinging. This is needed to look up the node public key
-   * in latest addressbook to verify the signature above.
+   * The node that is singing. This is needed to look up the node public key
+   * in latest address book to verify the signature above.
    */
   uint64 node_id = 2;
 }
