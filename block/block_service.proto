@@ -231,6 +231,23 @@ enum ReadBlockStreamResponseCode {
   READ_BLOCK_STREAM_RESPONSE_CODE_INVALID_MAX_PAYMENT_HBAR = 3;
 }
 
+// ---- ReadSavedState RPC ----
+
+message ReadSavedStateRequest {
+  // The payment for the request.
+  Payment payment = 1;
+}
+
+message ReadSavedStateResponse {
+  ReadSavedStateResponseCode status = 1;
+  // TBD: Add the saved state snapshot.
+}
+
+enum ReadSavedStateResponseCode {
+  READ_SAVED_STATE_RESPONSE_CODE_SUCCESS = 0;
+  READ_SAVED_STATE_RESPONSE_CODE_INSUFFICIENT_PAYMENT = 1;
+}
+
 /**
  * RPCs for the Block Node.
  */
@@ -254,13 +271,17 @@ service BlockService {
    */
   rpc ReadBlock(ReadBlockRequest) returns (ReadBlockResponse);
 
+  /**
+   * Read the saved state snapshot from the block node.
+   */
+  rpc ReadSavedStateSnapshot(ReadSavedStateRequest) returns (ReadSavedStateResponse);
+
   // ---- Streaming API ----
 
   /**
-   * Write a stream of blocks. Each WriteBlockStream in the stream may
-   * contain one or more BlockItem(s). The server must append each BlockItem to construct a block. The Block ends with a
-   * BlockItem containing a BlockStateProof. It is recommended that the server implementation verify the Block using the
-   * BlockStateProof to validate the contents.
+   * Write a stream of blocks. Each WriteBlockStream in the stream may contain one or more BlockItem(s). The server must
+   * append each BlockItem to construct a block. The Block ends with a BlockItem containing a BlockStateProof. It is
+   * recommended that the server implementation verify the Block using the BlockStateProof to validate the contents.
    */
   rpc WriteBlockStream (stream WriteBlockStreamRequest) returns (stream WriteBlockStreamResponse);
 
@@ -268,9 +289,9 @@ service BlockService {
    * Stream blocks from the block node. The ReadBlockStreamRequest contains the start and end block numbers of the
    * blocks to retrieve. The server will stream the blocks in the range of block numbers specified in the request. The
    * server will stream the blocks in ascending order of block number. The server will stop streaming blocks when the
-   * end block has been reached. The server will return a ReadBlockStreamResponse with a status of SUCCESS when the stream
-   * is complete. The server may return a ReadBlockStreamResponse with a status of READ_BLOCK_STREAM_INVALID_START_BLOCK_NUMBER
-   * if the start block number is greater than the end block number.
+   * end block has been reached. The server will return a ReadBlockStreamResponse with a status of SUCCESS when the
+   * stream is complete. The server may return a ReadBlockStreamResponse with a status of
+   * READ_BLOCK_STREAM_INVALID_START_BLOCK_NUMBER if the start block number is greater than the end block number.
    */
   rpc ReadBlockStream(stream ReadBlockStreamRequest) returns (stream ReadBlockStreamResponse);
 }
